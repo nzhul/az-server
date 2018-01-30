@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<script src="~/js/signalr-client-1.0.0-alpha2-final.min.js"></script>
+
+<input type="text" name="name" id="txtMessage" />
+<button id="sendBtn">Send</button>
+<div id="DisplayMessages"></div>
+
+<script>
+    let connection = new signalR.HubConnection('/chat');
+
+    connection.on('send', data => {
+        var DisplayMessagesDiv = document.getElementById("DisplayMessages");
+        DisplayMessagesDiv.innerHTML += "<br/>" + data;
+    });
+
+    connection.start();
+    function SendMessage() {
+        var msg = document.getElementById("txtMessage").value;
+        connection.invoke('send', msg);
+    }
+
+    var btn = document.getElementById("sendBtn");
+    btn.addEventListener('click', function () {
+        SendMessage();
+    })
+</script>
